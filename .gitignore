@@ -1,4 +1,8 @@
 node_modules
 build
 dist
+.env
 *.zip
+m3u8/av0.m3u8
+m3u8/*.ts
+.DS_Store
