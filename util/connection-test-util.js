@@ -26,7 +26,7 @@ async function testCameraConnection() {
   const netmask = process.env.CAMERA_NETMASK;
   const block = new Netmask(`${cameraIP}/${netmask}`);
 
-  const localIP = address.ip("en7"); // @TODO: dev only
+  const localIP = address.ip(process.env["WLAN_INTERFACE"]);
   if (!block.contains(localIP)) {
     console.error(new Date(), "local IP is not in the same network as the camera");
     return false;
