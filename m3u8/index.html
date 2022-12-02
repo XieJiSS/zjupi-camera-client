@@ -1,0 +1,65 @@
+<html>
+
+<head>
+  <title>HLS Player</title>
+</head>
+
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <video controls id="video" style="max-width: 720px;"></video>
+  <br>
+
+  <input id="ip-addr" type="text" placeholder="IP 地址" /> <button id="set-ip">连接摄像头</button>
+  <div><button id="sync-btn">尝试优化延迟</button></div>
+  <script>
+    /** @type {HTMLVideoElement} */
+    var video = document.getElementById('video');
+
+    function canplay() {
+      video.currentTime = Math.max(0, video.duration - 2);
+      video.muted = true;
+      video.play();
+      console.log(2, video);
+      video.removeEventListener('canplay', canplay);
+    }
+
+    var IP_REGEX = /^(?:\d{1,3}.){3}\d{1,3}$/;
+
+    function play(ip) {
+      if (!IP_REGEX.test(ip) && Number.isNaN(Number(ip))) {
+        alert("请输入正确的IP地址");
+        return;
+      }
+      if (Hls && Hls.isSupported()) {
+        var hls = new Hls();
+        hls.attachMedia(video);
+        video.addEventListener('canplay', canplay);
+        hls.loadSource(`http://${ip}:4096/streams/av0.m3u8`);
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.addEventListener('canplay', canplay);
+        video.src = `http://${ip}:4096/streams/av0.m3u8`;
+      } else {
+        alert("你的浏览器不支持 HLS 视频播放，请升级浏览器");
+      }
+    }
+
+    document.getElementById("sync-btn").addEventListener("click", canplay);
+    document.getElementById("set-ip").addEventListener("click", function () {
+      var ip = document.querySelector("#ip-addr").value;
+      play(ip);
+    });
+
+    var params = new URLSearchParams(location.search);
+    var ip = params.get("ip");
+    if (ip) {
+      play(ip);
+      document.querySelector("#ip-addr").value = ip;
+    } else if (IP_REGEX.test(location.hostname)) {
+      // domain
+      play(location.hostname);
+      document.querySelector("#ip-addr").value = location.hostname;
+    }
+  </script>
+</body>
+
+</html>
