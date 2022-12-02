@@ -20,6 +20,8 @@ if (!CAMERA_ID) {
   process.exit(1);
 }
 
+console.log(CAMERA_ID, "on wlan interface", process.env["WLAN_INTERFACE"]);
+
 let heartbeatFailedCount = 0;
 
 /**
