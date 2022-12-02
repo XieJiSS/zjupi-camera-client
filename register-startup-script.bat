@@ -1,3 +1,5 @@
 @echo off
 
-rem TODO
+powershell -c "pm2 startup"
+powershell
+pause
