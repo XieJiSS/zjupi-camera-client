@@ -1,11 +1,6 @@
-// @ts-check
-const { Socket } = require("net");
+import { Socket } from "net";
 
-/**
- * @param {URL} url
- * @param {{ [x: string]: string }} cookies
- */
-function getHTTP09GETResponseText(url, cookies) {
+export function getHTTP09GETResponseText(url: URL, cookies: { [x: string]: string }): Promise<string> {
   const host = url.host;
   const path = url.pathname;
   const params = url.searchParams;
@@ -38,12 +33,11 @@ Cookie: ${cookieHeader}\r\n\r\n`;
   });
 }
 
-/**
- * @param {URL} url
- * @param {{ [x: string]: string }} cookies
- * @param {URLSearchParams} body
- */
-function getHTTP09POSTResponseText(url, cookies, body) {
+export function getHTTP09POSTResponseText(
+  url: URL,
+  cookies: { [x: string]: string },
+  body: URLSearchParams
+): Promise<string> {
   const host = url.host;
   const path = url.pathname;
   const params = url.searchParams;
@@ -78,8 +72,3 @@ Content-Length: ${body.toString().length}\r\n\r\n${body}`;
     });
   });
 }
-
-module.exports = {
-  getHTTP09GETResponseText,
-  getHTTP09POSTResponseText,
-};

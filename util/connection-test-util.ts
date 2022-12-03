@@ -1,10 +1,10 @@
-// @ts-check
-require("dotenv").config();
-const axios = require("./init-axios");
-const { Netmask } = require("netmask");
-const address = require("address");
+import { config } from "dotenv";
+config();
+import axios from "./init-axios";
+import { Netmask } from "netmask";
+import address from "address";
 
-async function testServerConnection() {
+export async function testServerConnection() {
   const host = process.env.SERVER_IPv4;
   const port = process.env.SERVER_PORT;
   const url = new URL(`http://${host}:${port}/api/camera/ping`);
@@ -16,12 +16,12 @@ async function testServerConnection() {
     console.log(new Date(), "successfully connected to server");
     return true;
   } catch (error) {
-    console.error(new Date(), error);
+    console.error(new Date(), error.message);
     return false;
   }
 }
 
-async function testCameraConnection() {
+export async function testCameraConnection() {
   const cameraIP = process.env.CAMERA_IP;
   const netmask = process.env.CAMERA_NETMASK;
   const block = new Netmask(`${cameraIP}/${netmask}`);
@@ -43,8 +43,3 @@ async function testCameraConnection() {
     return false;
   }
 }
-
-module.exports = {
-  testServerConnection,
-  testCameraConnection,
-};

@@ -1,11 +1,12 @@
-// @ts-check
-require("dotenv").config();
+import { config } from "dotenv";
+config();
 
-const fs = require("fs");
-const ffmpeg = require("fluent-ffmpeg");
+import fs from "fs";
+import ffmpeg from "fluent-ffmpeg";
 
-const HLSServer = require("hls-server");
-const http = require("http");
+import HLSServer from "hls-server";
+import http from "http";
+import httpAttach from "http-attach";
 
 const server = http.createServer();
 const hls = new HLSServer(server, {
@@ -23,7 +24,7 @@ if (hlsPort === 0 || Number.isNaN(hlsPort)) {
   process.exit(1);
 }
 
-require("http-attach")(server, function (req, res, next) {
+httpAttach(server, function (req, res, next) {
   if (req.url === "/index.html") {
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     res.statusCode = 200;
@@ -33,10 +34,7 @@ require("http-attach")(server, function (req, res, next) {
   }
 });
 
-/**
- * @param {(...args: any) => void} endCallback
- */
-function startRTMPServer(endCallback) {
+export function startRTMPServer(endCallback: (...args: any) => void) {
   cleanUpMediaFiles();
   ffmpeg(`rtmp://${cameraIP}/${rtmpPath}`, { timeout: 60000 })
     .addOptions([
@@ -68,7 +66,7 @@ function startRTMPServer(endCallback) {
 /**
  * WARNING: this will end all ffmpeg processes on this machine
  */
-function endRTMPServer() {
+export function endRTMPServer() {
   server.close();
   if (require("os").platform() === "win32") {
     require("child_process").execSync("taskkill /f /im ffmpeg.exe");
@@ -86,5 +84,3 @@ function cleanUpMediaFiles() {
     }
   }
 }
-
-module.exports = { startRTMPServer, endRTMPServer };

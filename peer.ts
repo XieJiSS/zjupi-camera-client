@@ -1,15 +1,16 @@
-// @ts-check
-require("dotenv").config();
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
+import { config } from "dotenv";
+config();
+import express from "express";
+import fs from "fs";
+import path from "path";
 
-const { testServerConnection, testCameraConnection } = require("./util/connection-test-util");
-const { sendCameraOperation, initCameraController, setCameraSpeed } = require("./util/camera-controller");
-const { reportCameraError, getReportEnv } = require("./util/error-report");
-const { getLocalIP } = require("./util/ip-util");
+import { testServerConnection, testCameraConnection } from "./util/connection-test-util";
+import { sendCameraOperation, initCameraController, setCameraSpeed } from "./util/camera-controller";
+import { reportCameraError, getReportEnv } from "./util/error-report";
+import { getLocalIP } from "./util/ip-util";
+import { startRTMPServer } from "./rtmp-hls-server";
 
-const axios = require("./util/init-axios");
+import axios from "./util/init-axios";
 
 const app = express();
 const port = 5004;
@@ -20,14 +21,11 @@ if (!CAMERA_ID) {
   process.exit(1);
 }
 
-console.log(CAMERA_ID, "on wlan interface", process.env["WLAN_INTERFACE"]);
+console.log("This is camera", CAMERA_ID, "on wlan interface", process.env["WLAN_INTERFACE"]);
 
 let heartbeatFailedCount = 0;
 
-/**
- * @type {{ timer: NodeJS.Timeout | null, lastDirective: string | null }}
- */
-let stopCurrOpTimerInfo = {
+let stopCurrOpTimerInfo: { timer: NodeJS.Timeout | null; lastDirective: string | null } = {
   timer: null,
   lastDirective: null,
 };
@@ -65,8 +63,7 @@ app.post("/api/camera-client/operation", async (req, res) => {
     res.json({ success: false, message: "invalid speed" });
     return;
   }
-  /** @type {Partial<import("./util/camera-controller").CameraControlConfig>} */
-  const speedConfig = {};
+  const speedConfig: Partial<import("./util/camera-controller").CameraControlConfig> = {};
   if (directive === "left" || directive === "right") {
     speedConfig.horizontalRotateSpeed = speed;
   } else if (directive === "up" || directive === "down") {
@@ -183,7 +180,7 @@ app.listen(port, async () => {
     await exitWithSleep(2000, 1);
   }
 
-  require("./rtmp-hls-server").startRTMPServer(async function onRTMPServerEnded(...args) {
+  startRTMPServer(async function onRTMPServerEnded(...args) {
     console.error(new Date(), "RTMP server ended unexpectedly");
     await reportCameraError(
       "RTMP server ended unexpectedly",
@@ -193,7 +190,7 @@ app.listen(port, async () => {
   });
 });
 
-async function exitWithSleep(ms, code = 0) {
+async function exitWithSleep(ms: number, code = 0) {
   await require("timers/promises").setTimeout(ms);
   process.exit(code);
 }
@@ -208,7 +205,7 @@ async function clearMediaFiles() {
   }
 }
 
-const exitHook = require("async-exit-hook");
+import exitHook from "async-exit-hook";
 exitHook(async (callback) => {
   console.log(new Date(), "exiting");
   require("./rtmp-hls-server").endRTMPServer();

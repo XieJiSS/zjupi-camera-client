@@ -1,9 +1,8 @@
-// @ts-check
-
-require("dotenv").config();
-const axios = require("./init-axios");
-const { testCameraConnection } = require("./connection-test-util");
-const { getHTTP09GETResponseText, getHTTP09POSTResponseText } = require("./http09");
+import { config } from "dotenv";
+config();
+import axios from "./init-axios";
+import { testCameraConnection } from "./connection-test-util";
+import { getHTTP09GETResponseText, getHTTP09POSTResponseText } from "./http09";
 
 const cameraIP = process.env.CAMERA_IP;
 const username = process.env.CAMERA_USERNAME;
@@ -19,7 +18,7 @@ const controlConfig = {
   verticalRotateSpeed: 30,
 };
 
-async function getSessionCookie() {
+export async function getSessionCookie() {
   if (!testCameraConnection()) {
     return "";
   }
@@ -47,7 +46,7 @@ async function getSessionCookie() {
 /**
  * is this necessary? seems like apis always work, even without login
  */
-async function loginUser() {
+export async function loginUser() {
   const url = new URL(`http://${cameraIP}/login/login?username=${username}&password=${password}&_=${Date.now()}`);
   try {
     const responseText = await getHTTP09GETResponseText(url, {
@@ -73,7 +72,7 @@ const INIT_FAILURE_CODES = {
   0: "success",
 };
 
-async function initCameraUser() {
+export async function initCameraUser() {
   if (!testCameraConnection()) {
     return 1;
   }
@@ -95,21 +94,17 @@ async function initCameraUser() {
  * @prop {number} horizontalRotateSpeed
  * @prop {number} verticalRotateSpeed
  */
+export interface CameraControlConfig {
+  horizontalRotateSpeed: number;
+  verticalRotateSpeed: number;
+}
 
-/**
- * @param {Partial<CameraControlConfig>} _
- */
-function setCameraSpeed({ horizontalRotateSpeed: hs, verticalRotateSpeed: vs }) {
+export function setCameraSpeed({ horizontalRotateSpeed: hs, verticalRotateSpeed: vs }: Partial<CameraControlConfig>) {
   controlConfig.horizontalRotateSpeed = hs ?? controlConfig.horizontalRotateSpeed;
   controlConfig.verticalRotateSpeed = vs ?? controlConfig.verticalRotateSpeed;
 }
 
-/**
- *
- * @param {string} directive
- * @param {"start" | "stop"} status
- */
-async function sendCameraOperation(directive, status) {
+export async function sendCameraOperation(directive: string, status: "start" | "stop") {
   const verticalDirectives = ["up", "down"];
   const opType = verticalDirectives.includes(directive) ? "vertical" : "horizontal";
   const speed = opType === "vertical" ? controlConfig.verticalRotateSpeed : controlConfig.horizontalRotateSpeed;
@@ -140,7 +135,7 @@ async function sendCameraOperation(directive, status) {
   }
 }
 
-async function initCameraController() {
+export async function initCameraController() {
   console.log(new Date(), "initializing camera...");
   const initResult = await initCameraUser();
   if (initResult !== 0) {
@@ -150,9 +145,3 @@ async function initCameraController() {
   console.log(new Date(), "successfully initialized camera");
   return true;
 }
-
-module.exports = {
-  initCameraController,
-  sendCameraOperation,
-  setCameraSpeed,
-};
