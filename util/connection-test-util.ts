@@ -16,7 +16,11 @@ export async function testServerConnection() {
     console.log(new Date(), "successfully connected to server");
     return true;
   } catch (error) {
-    console.error(new Date(), error.message);
+    if (error instanceof Error) {
+      console.error(new Date(), error.message);
+    } else {
+      console.error(new Date(), String(error));
+    }
     return false;
   }
 }
