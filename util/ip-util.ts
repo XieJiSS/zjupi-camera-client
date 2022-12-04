@@ -7,13 +7,23 @@ import { Netmask } from "netmask";
 const serverHost = process.env.SERVER_IPv4;
 const serverNetmask = process.env.SERVER_IPv4_NETMASK;
 
+let cachedLocalIP: string | null = null;
+
 export function getLocalIP(): string | void {
+  if (cachedLocalIP) {
+    // make sure that the result IP is consistent, even if the network interface changes.
+    // The process need to be restarted if such a change happens, and should not stay in
+    // a state where the IP is not consistent.
+    return cachedLocalIP;
+  }
+
   const wlanInterface = process.env["WLAN_INTERFACE"];
   console.log("pre-configured wlan interface name is", wlanInterface);
   const block = new Netmask(`${serverHost}/${serverNetmask}`);
   if (wlanInterface) {
     const ip: string | void = address.ip(wlanInterface);
     if (ip && block.contains(ip)) {
+      cachedLocalIP = ip;
       return ip;
     }
     console.error("wrong subnet:", ip, "not in", `${serverHost}/${serverNetmask}`);
@@ -29,6 +39,7 @@ export function getLocalIP(): string | void {
             const ip = item.address;
             if (block.contains(ip)) {
               console.log("guessed wlan IP:", ip, name);
+              cachedLocalIP = ip;
               return ip;
             }
           }
@@ -43,6 +54,7 @@ export function getLocalIP(): string | void {
         const ip = item.address;
         if (block.contains(ip)) {
           console.log("guessed wlan IP with low confidence:", ip, name);
+          cachedLocalIP = ip;
           return ip;
         }
       }
