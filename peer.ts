@@ -34,7 +34,7 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   const ip = req.socket.remoteAddress;
-  if (!ip || ![process.env.SERVER_IPv4, process.env.SERVER_IPv6].includes(ip)) {
+  if (!ip || ![process.env.SERVER_IPv4, process.env.SERVER_IPv6_1, process.env.SERVER_IPv6_2].includes(ip)) {
     res.json({ success: false, message: "unauthorized IP" });
     console.error(new Date(), "unauthorized remote IP:", ip);
     return;
