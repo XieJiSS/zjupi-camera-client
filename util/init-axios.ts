@@ -10,12 +10,14 @@ import { Netmask } from "netmask";
 
 function guessWlanIP(): string | void {
   const wlanInterface = process.env["WLAN_INTERFACE"];
+  console.log("pre-configured wlan interface name is", wlanInterface);
   const block = new Netmask(`${serverHost}/${serverNetmask}`);
   if (wlanInterface) {
-    const ip = interfaceIP(wlanInterface);
-    if (block.contains(ip)) {
+    const ip: string | void = interfaceIP(wlanInterface);
+    if (ip && block.contains(ip)) {
       return ip;
     }
+    console.error("wrong subnet:", ip, "not in", `${serverHost}/${serverNetmask}`);
   }
   const interfaces = networkInterfaces();
   const wlanInterfacePrefix = process.env["WLAN_INTERFACE_PREFIX"];
