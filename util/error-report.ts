@@ -22,7 +22,7 @@ export async function reportCameraError(summary: string, detail: string) {
 }
 
 export function getReportEnv() {
-  const env = readFileSync(__dirname + "/.env").toString("utf-8");
+  const env = readFileSync(__dirname + "/../.env").toString("utf-8");
   const lines = env.trimEnd().split("\n");
   return lines.filter((line) => !line.includes("PASSWORD")).join("\n");
 }
