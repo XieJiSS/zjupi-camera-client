@@ -1,5 +1,3 @@
-import { config } from "dotenv";
-config();
 import address from "address";
 
 import { networkInterfaces } from "os";

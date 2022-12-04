@@ -1,5 +1,3 @@
-// @ts-check
-
 import { readFileSync } from "fs";
 import axios from "./init-axios";
 

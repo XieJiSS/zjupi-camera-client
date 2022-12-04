@@ -1,5 +1,3 @@
-import { config } from "dotenv";
-config();
 import axios from "./init-axios";
 import { testCameraConnection } from "./connection-test-util";
 import { getHTTP09GETResponseText, getHTTP09POSTResponseText } from "./http09";

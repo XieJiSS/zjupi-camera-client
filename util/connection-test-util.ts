@@ -1,5 +1,3 @@
-import { config } from "dotenv";
-config();
 import axios from "./init-axios";
 import { Netmask } from "netmask";
 import { getLocalIP } from "./ip-util";

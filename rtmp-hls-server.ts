@@ -1,6 +1,3 @@
-import { config } from "dotenv";
-config();
-
 import fs from "fs";
 import os from "os";
 import { execSync } from "child_process";
