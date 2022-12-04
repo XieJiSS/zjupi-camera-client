@@ -191,8 +191,12 @@ app.listen(port, async () => {
 });
 
 async function exitWithSleep(ms: number, code = 0) {
-  await require("timers/promises").setTimeout(ms);
+  await sleep(ms);
   process.exit(code);
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function clearMediaFiles() {
