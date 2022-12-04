@@ -2,7 +2,7 @@ import { config } from "dotenv";
 config();
 import axios from "./init-axios";
 import { Netmask } from "netmask";
-import address from "address";
+import { getLocalIP } from "./ip-util";
 
 export async function testServerConnection() {
   const host = process.env.SERVER_IPv4;
@@ -30,8 +30,8 @@ export async function testCameraConnection() {
   const netmask = process.env.CAMERA_NETMASK;
   const block = new Netmask(`${cameraIP}/${netmask}`);
 
-  const localIP = address.ip(process.env["WLAN_INTERFACE"]);
-  if (!block.contains(localIP)) {
+  const localIP = getLocalIP();
+  if (!localIP || !block.contains(localIP)) {
     console.error(new Date(), "local IP is not in the same network as the camera");
     return false;
   }
