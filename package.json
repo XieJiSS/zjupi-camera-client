@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/peer.js",
   "scripts": {
-    "build": "yarn -p typescript tsc",
+    "build": "yarn -p typescript tsc && cp .env dist/.env",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
