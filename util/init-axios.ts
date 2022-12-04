@@ -26,10 +26,12 @@ function guessWlanIP(): string | void {
       if (!info) continue;
       if (name.startsWith(wlanInterfacePrefix)) {
         for (const item of info) {
-          const ip = item.address;
-          if (block.contains(ip)) {
-            console.log("guessed wlan IP:", ip, name);
-            return ip;
+          if (item.family === "IPv4") {
+            const ip = item.address;
+            if (block.contains(ip)) {
+              console.log("guessed wlan IP:", ip, name);
+              return ip;
+            }
           }
         }
       }
@@ -38,10 +40,12 @@ function guessWlanIP(): string | void {
   for (const [name, info] of Object.entries(interfaces)) {
     if (!info) continue;
     for (const item of info) {
-      const ip = item.address;
-      if (block.contains(ip)) {
-        console.log("guessed wlan IP with low confidence:", ip, name);
-        return ip;
+      if (item.family === "IPv4") {
+        const ip = item.address;
+        if (block.contains(ip)) {
+          console.log("guessed wlan IP with low confidence:", ip, name);
+          return ip;
+        }
       }
     }
   }
