@@ -8,7 +8,7 @@ import path from "path";
 import { testServerConnection, testCameraConnection } from "./util/connection-test-util";
 import { sendCameraOperation, initCameraController, setCameraSpeed } from "./util/camera-controller";
 import { reportCameraError, getReportEnv } from "./util/error-report";
-import { getLocalIP } from "./util/ip-util";
+import { getWlanIP } from "./util/ip-util";
 import { startRTMPServer, endRTMPServer } from "./rtmp-hls-server";
 
 import axios from "./util/init-axios";
@@ -127,7 +127,7 @@ app.post("/api/camera-client/operation", async (req, res) => {
 });
 
 app.listen(port, async () => {
-  console.log(new Date(), `camera peer server listening at http://${getLocalIP()}:${port}`);
+  console.log(new Date(), `camera peer server listening at http://${getWlanIP()}:${port}`);
 
   const serverConnectionTestResult = await testServerConnection();
   if (!serverConnectionTestResult) {
