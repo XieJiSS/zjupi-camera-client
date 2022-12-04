@@ -2,6 +2,8 @@ import { config } from "dotenv";
 config();
 
 import fs from "fs";
+import os from "os";
+import { execSync } from "child_process";
 import ffmpeg from "fluent-ffmpeg";
 
 import HLSServer from "hls-server";
@@ -68,10 +70,14 @@ export function startRTMPServer(endCallback: (...args: any) => void) {
  */
 export function endRTMPServer() {
   server.close();
-  if (require("os").platform() === "win32") {
-    require("child_process").execSync("taskkill /f /im ffmpeg.exe");
-  } else {
-    require("child_process").execSync("killall ffmpeg");
+  try {
+    if (os.platform() === "win32") {
+      execSync("taskkill /f /im ffmpeg.exe");
+    } else {
+      execSync("killall ffmpeg");
+    }
+  } catch (e) {
+    console.error(new Date(), "error killing ffmpeg process");
   }
   cleanUpMediaFiles();
 }

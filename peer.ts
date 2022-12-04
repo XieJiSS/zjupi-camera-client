@@ -8,7 +8,7 @@ import { testServerConnection, testCameraConnection } from "./util/connection-te
 import { sendCameraOperation, initCameraController, setCameraSpeed } from "./util/camera-controller";
 import { reportCameraError, getReportEnv } from "./util/error-report";
 import { getLocalIP } from "./util/ip-util";
-import { startRTMPServer } from "./rtmp-hls-server";
+import { startRTMPServer, endRTMPServer } from "./rtmp-hls-server";
 
 import axios from "./util/init-axios";
 
@@ -212,7 +212,9 @@ async function clearMediaFiles() {
 import exitHook from "async-exit-hook";
 exitHook(async (callback) => {
   console.log(new Date(), "exiting");
-  require("./rtmp-hls-server").endRTMPServer();
+
+  endRTMPServer();
   await clearMediaFiles();
+
   callback();
 });
