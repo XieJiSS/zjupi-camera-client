@@ -122,10 +122,9 @@ axios@^0.27.2:
     follow-redirects "^1.14.9"
     form-data "^4.0.0"
 
-body-parser@2.0.0-beta.1:
+"body-parser@https://github.com/XieJiSS/body-parser#v2.0.0-beta.1-fix":
   version "2.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-2.0.0-beta.1.tgz#d4ed97d6ed51f6040b967db0db2252a0b235a661"
-  integrity sha512-I1v2bt2OdYqtmk8nEFZuEf+9Opb30DphYwTPDbgg/OorSAoJOuTpWyDrZaSWQw7FdoevbBRCP2+9z/halXSWcA==
+  resolved "https://github.com/XieJiSS/body-parser#700945458d23c29b3443cbabff5974f3f91a4d8a"
   dependencies:
     bytes "3.1.1"
     content-type "~1.0.4"
@@ -134,7 +133,7 @@ body-parser@2.0.0-beta.1:
     http-errors "1.8.1"
     iconv-lite "0.4.24"
     on-finished "~2.3.0"
-    qs "6.9.6"
+    qs "6.9.7"
     raw-body "2.4.2"
     type-is "~1.6.18"
 
@@ -226,13 +225,13 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==
 
-"express@https://github.com/XieJiSS/express#v5.0.0-beta.1-fix":
+"express@https://github.com/XieJiSS/express#v5.0.0-beta.1-fix.1":
   version "5.0.0-beta.1"
-  resolved "https://github.com/XieJiSS/express#8726ecc2fa68624fb64f0bdf1855e30335f94f43"
+  resolved "https://github.com/XieJiSS/express#36f3fad4f9e75a45d398056fe13702cd5a72fea4"
   dependencies:
     accepts "~1.3.7"
     array-flatten "3.0.0"
-    body-parser "2.0.0-beta.1"
+    body-parser "https://github.com/XieJiSS/body-parser#v2.0.0-beta.1-fix"
     content-disposition "0.5.4"
     content-type "~1.0.4"
     cookie "0.4.1"
@@ -435,11 +434,6 @@ proxy-addr@~2.0.7:
   dependencies:
     forwarded "0.2.0"
     ipaddr.js "1.9.1"
-
-qs@6.9.6:
-  version "6.9.6"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.9.6.tgz#26ed3c8243a431b2924aca84cc90471f35d5a0ee"
-  integrity sha512-TIRk4aqYLNoJUbd+g2lEdz5kLWIuTMRagAXxl78Q0RiVjAOugHmeKNGdd3cwo/ktpf9aL9epCfFqWDEKysUlLQ==
 
 qs@6.9.7:
   version "6.9.7"
