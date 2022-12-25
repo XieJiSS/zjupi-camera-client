@@ -173,9 +173,13 @@ app.listen(port, async () => {
       await exitWithSleep(2000, 1);
     }
     const heartbeatResult = (
-      await axios.post("/api/camera/heartbeat", {
-        cameraId: CAMERA_ID,
-      })
+      await axios
+        .post<{ success: boolean; message: string }>("/api/camera/heartbeat", {
+          cameraId: CAMERA_ID,
+        })
+        .catch((e) => {
+          return { data: { success: false, message: String(e) } };
+        })
     ).data;
     if (!heartbeatResult.success) {
       console.error(new Date(), "heartbeat failed:", heartbeatResult.message);
@@ -226,6 +230,7 @@ async function clearMediaFiles() {
 }
 
 import exitHook from "async-exit-hook";
+import { AxiosResponse } from "axios";
 exitHook(async (callback) => {
   console.log(new Date(), "exiting");
 
