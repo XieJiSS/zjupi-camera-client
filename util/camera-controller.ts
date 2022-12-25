@@ -102,33 +102,33 @@ export function setCameraSpeed({ horizontalRotateSpeed: hs, verticalRotateSpeed:
   controlConfig.verticalRotateSpeed = vs ?? controlConfig.verticalRotateSpeed;
 }
 
-export async function sendCameraOperation(directive: string, status: "start" | "stop") {
-  const verticalDirectives = ["up", "down"];
-  const opType = verticalDirectives.includes(directive) ? "vertical" : "horizontal";
+export async function sendCameraOperation(direction: "up" | "down" | "left" | "right", operation: "start" | "stop") {
+  const verticalDirections = ["up", "down"];
+  const opType = verticalDirections.includes(direction) ? "vertical" : "horizontal";
   const speed = opType === "vertical" ? controlConfig.verticalRotateSpeed : controlConfig.horizontalRotateSpeed;
-  const op = `${directive}_${status}`;
-  const command = {
+  const cameraCommand = `${direction}_${operation}`;
+  const payload = {
     SysCtrl: {
-      PtzCtrl: { nChanel: 0, szPtzCmd: op, byValue: speed },
+      PtzCtrl: { nChanel: 0, szPtzCmd: cameraCommand, byValue: speed },
     },
   };
-  const commandStr = JSON.stringify(command);
+  const serializedPayload = JSON.stringify(payload);
   const url = new URL(`http://${cameraIP}/ajaxcom`);
   try {
     const responseText = await getHTTP09POSTResponseText(
       url,
       { "-goahead-session-": cameraSession.sessionCookie },
-      new URLSearchParams({ szCmd: commandStr })
+      new URLSearchParams({ szCmd: serializedPayload })
     );
     const json = JSON.parse(responseText);
     if (!json || json.szError || json.errno) {
-      console.error(new Date(), "failed to invoke camera operation", op, "and got resp", json);
+      console.error(new Date(), "failed to invoke camera operation", cameraCommand, "and got resp", json);
       return false;
     }
-    console.log(new Date(), "successfully invoked camera operation", op, "and got resp", json);
+    console.log(new Date(), "successfully invoked camera operation", cameraCommand, "and got resp", json);
     return true;
   } catch (error) {
-    console.error(new Date(), "failed to invoke camera operation", op, "because of", error);
+    console.error(new Date(), "failed to invoke camera operation", cameraCommand, "because of", error);
     return false;
   }
 }
