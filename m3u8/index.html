@@ -16,11 +16,14 @@
     /** @type {HTMLVideoElement} */
     var video = document.getElementById('video');
 
+    function syncVideo() {
+      video.currentTime = Math.max(0, video.duration - 3);
+    }
     function canplay() {
-      video.currentTime = Math.max(0, video.duration - 2);
+      syncVideo();
+
       video.muted = true;
       video.play();
-      console.log(2, video);
       video.removeEventListener('canplay', canplay);
     }
 
@@ -60,6 +63,13 @@
       play(location.hostname);
       document.querySelector("#ip-addr").value = location.hostname;
     }
+
+    setInterval(() => {
+      if (video.currentTime < video.duration - 8) {
+        console.log("automatically sync video due to high lag");
+        syncVideo();
+      }
+    }, 10000);
   </script>
 </body>
 
