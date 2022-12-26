@@ -24,6 +24,13 @@ if (!CAMERA_ID) {
 
 console.log("This is camera", CAMERA_ID, "on wlan interface", process.env["WLAN_INTERFACE"]);
 
+const validCommandServerIPs = [
+  process.env.SERVER_IPv4,
+  process.env.SERVER_IPv4 ? "::ffff:" + process.env.SERVER_IPv4 : "N/A", // v4 mapped
+  process.env.SERVER_IPv6_1,
+  process.env.SERVER_IPv6_2,
+];
+
 let heartbeatFailedCount = 0;
 
 interface StopCurrOpTimerInfo {
@@ -39,7 +46,7 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   const ip = req.socket.remoteAddress;
-  if (!ip || ![process.env.SERVER_IPv4, process.env.SERVER_IPv6_1, process.env.SERVER_IPv6_2].includes(ip)) {
+  if (!ip || !validCommandServerIPs.includes(ip)) {
     res.json({ success: false, message: "unauthorized IP" });
     console.error(new Date(), "unauthorized remote IP:", ip);
     return;
