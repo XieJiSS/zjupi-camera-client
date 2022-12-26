@@ -75,11 +75,11 @@
     }
 
     setInterval(() => {
-      if (video.currentTime < video.duration - 8) {
+      if (video.currentTime < video.duration - 6) {
         console.log("automatically sync video due to high lag");
         syncVideo();
       }
-    }, 10000);
+    }, 6000);
   </script>
 </body>
 

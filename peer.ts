@@ -114,8 +114,8 @@ app.post("/api/camera-client/operation", async (req, res) => {
   if (operation === "start") {
     stopCurrOpTimerInfo = {
       timer: setTimeout(async () => {
-        console.log(new Date(), "automatically stopping the operation after 3s:", direction);
-        // stop the current operation after 3 seconds, in case the client fails to stop it,
+        console.log(new Date(), "automatically stopping the operation after 5s:", direction);
+        // stop the current operation after 5 seconds, in case the client fails to stop it,
         // and didn't send other operations in advance.
         // since we're using await, it may happen that when sending "stop" (before clearing
         // stopCurrOpTimerInfo.timer), a new operation comes in, and another "stop" is sent,
@@ -124,7 +124,7 @@ app.post("/api/camera-client/operation", async (req, res) => {
 
         stopCurrOpTimerInfo.timer = null;
         stopCurrOpTimerInfo.lastDirection = null;
-      }, 3000),
+      }, 5000),
       lastDirection: direction,
     };
   } else {
